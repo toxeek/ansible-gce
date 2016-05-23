@@ -1,0 +1,20 @@
+---
+# sysctl
+noproc_val: 8192
+nofile_val: 65535
+swappiness_val: 5
+ip_conntrack_max_val: 65536
+max_tw_buckets: 65536
+nf_conntrack_max: 65536
+
+# csm
+version_url: "http://myurl"
+code_url1: "http://myurl"
+code_url2: "url"
+config_url1: "http://myurl"
+config_url2: "url"
+code_suffix: "url"
+config_prefix: "url"
+tmpdir: "/tmp"
+app_home: "path"
+appfarm_config: "path"

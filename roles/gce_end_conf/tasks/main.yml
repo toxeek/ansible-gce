@@ -1,0 +1,63 @@
+---
+
+- name: change ssh port to 2201
+  set_fact:
+    ansible_ssh_port: 2201
+
+- name: add systems user to sudoers
+  lineinfile: 
+    dest: "/etc/sudoers" 
+    state: present
+    line: "systems ALL=(app) NOPASSWD: ALL"
+
+# next role tasks focus on hostname manipulations 
+- name: get the host pulic public_ip
+  shell: "wget -qO- http://ipecho.net/plain|awk '{print;exit}'"
+  register: host_ip
+
+- name: get the hostname
+  command: hostname 
+  register: result
+
+- name: add entry to hosts file
+  lineinfile: 
+    dest: "/etc/hosts"
+    line: "{{ host_ip.stdout }} {{ result.stdout }}.domain.company.com" 
+
+- name: add hostname entry to network file
+  lineinfile: 
+    dest: "/etc/sysconfig/network"
+    regexp: "^HOSTNAME" 
+    line: "HOSTNAME={{ result.stdout }}.domain.company.com" 
+
+- name: add crontab entry
+  cron: 
+    name: "reboot entry" 
+    special_time: reboot
+    job: "/bin/hostname $(curl --silent \"http://metadata.google.internal/computeMetadata/v1/instance/disks/0/device-name\" -H \"Metadata-Flavor: Google\").domain.company.com"
+
+- name: restarts app on reboot
+  cron: 
+    name: "restart app" 
+    user: cds
+    special_time: reboot
+    job: "app restart"
+
+- name: fetch ssh keys
+  command: bash /path/fetch_authorized_keys.sh
+  become: yes
+  become_method: sudo
+  become_user: app
+
+- name: install cdn edge install sh
+  command: bash /path/cdn_edge_install.sh
+  become: yes
+  become_method: sudo
+  become_user: app
+
+- name: restart machine
+  shell: shutdown -t 2 -r now "Ansible updates triggered"
+  async: 0
+  poll: 0
+  ignore_errors: true
+

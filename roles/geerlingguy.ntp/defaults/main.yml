@@ -1,0 +1,10 @@
+---
+ntp_enabled: true
+ntp_timezone: Europe/London
+
+ntp_manage_config: false
+ntp_servers:
+ - 0.uk.pool.ntp.org iburst
+ - 1.uk.pool.ntp.org iburst
+ - 2.uk.pool.ntp.org iburst
+ - 3.uk.pool.ntp.org iburst

@@ -1,0 +1,32 @@
+##############################################################
+
+In order to run the delete_instance.yml playbook we should call it like this:
+ANSIBLE_REMOTE_PORT=2201 ansible-playbook -vvvv -e "env=staging" delete_instance.yml
+
+^ that is because during provisioning, we change the ssh port to 2201.
+
+
+
+To run the create_instance.yml playbook:
+ansible-playbook -vvvv -e "env=staging" create_instance.yml
+
+^ the instance names are hardcoded into the playbook, can be placed in a variable.
+
+
+
+The parameter -e  "env=staging" is passed as an ansible extra variable. This is not fully 
+functional atm, but it serves as a PoC for managing variables for dynamic environments, 
+AKA staging and production.
+
+
+If some VM/s fails, then Ansible will create a *retry file with the inventory for the failed VMs.
+So in order to re-run these, we'd just type:
+ansible-playbook -vvvv -e "env=staging" -i *retry.yml
+
+
+After we create the instances, in order to run some module or playbook on the existing VMs, we'd run 
+Ansible with the dynamic inventory:
+ANSIBLE_REMOTE_PORT=2201 ansible all -i inventory/ -m ${MODULE}
+ANSIBLE_REMOTE_PORT=2201 ansible-playbook -vvvv ${PLAYBOOK} -i inventory/
+
+##############################################################

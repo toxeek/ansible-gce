@@ -1,0 +1,25 @@
+---
+  - name: Delete instances
+    hosts: localhost
+    gather_facts: no
+    connection: local
+
+    vars:
+      service_account_email: LONGID-compute@developer.gserviceaccount.com
+      # pem_file looks broken on Ansible 2
+      # credentials_file was introduced in ansible 2.1.0
+      pem_file: /etc/ansible/keys/pkey.pem
+      project_id: gce-edge-test
+      zone: europe-west1-c
+      names: edgetest-1,edgetest-2,edgetest-3,edgetest-4,edgetest-5,edgetest-6,edgetest-7,edgetest-8
+
+    tasks:
+      - name: Destroy instances
+        gce:
+            instance_names: "{{ names }}" 
+            service_account_email: "{{ service_account_email }}"
+            pem_file: "{{ pem_file }}"
+            project_id: "{{ project_id }}"
+            zone: "{{ zone }}"
+            tags: gce-test-edges
+            state: 'absent'

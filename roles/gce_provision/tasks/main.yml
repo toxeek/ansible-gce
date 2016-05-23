@@ -1,0 +1,8 @@
+---
+- name: provision csm rpms
+  yum: name={{item}} state=present disable_gpg_check=yes
+  with_items:
+    - "wget"
+    - "http://repo:***@HIDE.company.com/repo/edge/x86_64/rpmforge-release-0.5.3-1.el5.rf.x86_64.rpm"
+    - "python-pydns"
+    - "http://repo:***@HIDE.company.com/repo/edge/x86_64/edge-repo-1.0-4.noarch.rpm" 

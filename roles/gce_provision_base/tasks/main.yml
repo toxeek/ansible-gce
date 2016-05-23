@@ -1,0 +1,63 @@
+---
+- name: disables SELinux
+  selinux: state=disabled
+
+- name: create company system group
+  group: name=company state=present
+
+- name: create app user
+  user: name=app comment="app user" group=company state=present system=no
+
+- name: install base packages
+  yum: name={{item}} state=installed
+  with_items:
+    - openssh-clients
+    - vixie-cron
+    - curl
+
+- name: modify PAM limits for user cds
+  lineinfile: 
+    dest: "{{ item.dest }}"
+    line: "{{ item.line }}" 
+    insertafter: EOF
+  with_items:
+    - { dest: "/etc/security/limits.conf", line: "cds soft nproc 8192" }
+    - { dest: "/etc/security/limits.conf", line: "cds hard nproc 8192" }
+    - { dest: "/etc/security/limits.conf", line: "cds soft nofile 65535" }
+    - { dest: "/etc/security/limits.conf", line: "cds hard nofile 65535" }
+
+- name: modify hosts file
+  lineinfile: 
+    dest: "/etc/hosts"
+    line: "EXT_IP_HERE domain.com" 
+    insertafter: EOF  
+
+- name: enable nf_conntrack
+  lineinfile: 
+    dest: "/etc/sysconfig/iptables-config"
+    line: "IPTABLES_MODULES=\"ip_conntrack nf_conntrack\"" 
+    insertafter: EOF
+  # we will restart the machine no need, aslo blocks ssh port as changes to 2201    
+  # notify:
+   # - restart iptables
+
+- name: modify sysctl.conf 
+  lineinfile: 
+    dest: "{{ item.dest }}" 
+    line: "{{ item.line }}" 
+    insertafter: EOF
+  with_items:
+    - { dest: "/etc/sysctl.conf", line: "vm.swappiness=5" }
+    - { dest: "/etc/sysctl.conf", line: "net.ipv4.ip_conntrack_max=65535"  }
+    - { dest: "/etc/sysctl.conf", line: "net.ipv4.tcp_max_tw_buckets=65536" }
+    - { dest: "/etc/sysctl.conf", line: "net.nf_conntrack_max=65536" }
+
+- name: make sysctl changes permanent
+  shell: sysctl -w
+  args: 
+    executable: /bin/bash
+
+
+
+
+

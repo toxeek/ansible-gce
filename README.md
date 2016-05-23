@@ -1,2 +1,2 @@
-# ansible-gce
-gce provisioning demo
+# ansible-controller
+bootstrap ansible controller on GCE
