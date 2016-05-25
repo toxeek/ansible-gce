@@ -3,7 +3,7 @@
 # bootstrap for ansible on GCE.
 # it seems that ansible pem_file is broken on Ansible 2
 # we will install latest ansible from github not Yum, and also libcloud from github
-
+#
 # there is another repository on my github for just the bootstrap
 # prerequsites - git, better do a yum update && yum upgrade first too
 
