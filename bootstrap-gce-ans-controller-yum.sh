@@ -4,7 +4,7 @@
 # it seems that ansible pem_file is broken on Ansible 2
 # we will install latest ansible from github not Yum, and also libcloud from github
 
-# coded by toxeek 
+# there is another repository on my github for just the bootstrap
 # prerequsites - git, better do a yum update && yum upgrade first too
 
 [ "$UID" -ne "0" ] && echo "you are not root." >&2 && exit 1
