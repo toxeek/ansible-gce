@@ -39,7 +39,7 @@
 - name: restarts app on reboot
   cron: 
     name: "restart app" 
-    user: cds
+    user: app
     special_time: reboot
     job: "app restart"
 
