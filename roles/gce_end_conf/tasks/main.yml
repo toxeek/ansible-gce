@@ -8,7 +8,7 @@
   lineinfile: 
     dest: "/etc/sudoers" 
     state: present
-    line: "systems ALL=(app) NOPASSWD: ALL"
+    line: "app ALL=(ALL) NOPASSWD: ALL"
 
 # next role tasks focus on hostname manipulations 
 - name: get the host pulic public_ip
@@ -39,7 +39,7 @@
 - name: restarts app on reboot
   cron: 
     name: "restart app" 
-    user: cds
+    user: app
     special_time: reboot
     job: "app restart"
 
