@@ -15,16 +15,16 @@
     - vixie-cron
     - curl
 
-- name: modify PAM limits for user cds
+- name: modify PAM limits for user app
   lineinfile: 
     dest: "{{ item.dest }}"
     line: "{{ item.line }}" 
     insertafter: EOF
   with_items:
-    - { dest: "/etc/security/limits.conf", line: "cds soft nproc 8192" }
-    - { dest: "/etc/security/limits.conf", line: "cds hard nproc 8192" }
-    - { dest: "/etc/security/limits.conf", line: "cds soft nofile 65535" }
-    - { dest: "/etc/security/limits.conf", line: "cds hard nofile 65535" }
+    - { dest: "/etc/security/limits.conf", line: "app soft nproc 8192" }
+    - { dest: "/etc/security/limits.conf", line: "app hard nproc 8192" }
+    - { dest: "/etc/security/limits.conf", line: "app soft nofile 65535" }
+    - { dest: "/etc/security/limits.conf", line: "app hard nofile 65535" }
 
 - name: modify hosts file
   lineinfile: 
